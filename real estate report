@@ -1,0 +1,152 @@
+
+
+# **UAE Real Estate Market Analysis Report**
+
+## **1️⃣ Project Overview**
+
+This project explores the **UAE real estate market** using a dataset of **492 property listings** across major cities such as Dubai, Abu Dhabi, Sharjah, Ajman, and Ras Al Khaimah.
+
+**Objective:**
+
+* Analyze property prices, bedroom distribution, and market trends
+* Identify top-performing areas and market segments
+* Create visualizations to support investment and business decisions
+
+**Tools & Technologies:**
+
+* Python, Pandas, NumPy for data processing
+* Matplotlib & Seaborn for visualization
+* Jupyter Notebook / Google Colab
+
+---
+
+## **2️⃣ Data Overview**
+
+The dataset contains **11 columns**:
+
+| Column         | Description                          |
+| -------------- | ------------------------------------ |
+| id             | Unique property ID                   |
+| title          | Property title / description         |
+| displayAddress | Full address of the property         |
+| bathrooms      | Number of bathrooms (constant: 2)    |
+| bedrooms       | Number of bedrooms                   |
+| addedOn        | Date property was listed             |
+| type           | Buy/Sell                             |
+| rera           | RERA developer ID                    |
+| propertyType   | Apartment, Villa, etc.               |
+| price          | Property price in AED                |
+| city           | Extracted city from `displayAddress` |
+| area           | Extracted area from `displayAddress` |
+
+**Observations:**
+
+* All properties have **2 bathrooms**, so bathrooms do not impact price correlation
+* Prices range from **233,000 AED to over 14,500,000 AED**
+* Dataset covers multiple cities and areas for comprehensive analysis
+
+---
+
+## **3️⃣ Data Cleaning & Feature Engineering**
+
+* Converted `price` to integer for calculations
+* Extracted `city` and `area` from `displayAddress`
+* Created **Price Ranges** for market segmentation:
+
+  * `<500k`, `500k-1M`, `1M-2M`, `2M-5M`, `>5M` AED
+
+---
+
+## **4️⃣ Exploratory Data Analysis (EDA)**
+
+### **4.1 Price vs Number of Bedrooms**
+
+* **Finding:** Average property prices increase with the number of bedrooms
+* **Visual:** Heatmap
+
+```python
+city_bedrooms_price = df.groupby(['city','bedrooms'])['price'].mean().unstack()
+sns.heatmap(city_bedrooms_price, annot=True, fmt=".0f", cmap="YlGnBu")
+```
+
+---
+
+### **4.2 Price Distribution per City**
+
+* **Finding:** Dubai has the highest concentration of expensive properties; Sharjah and Ajman have more affordable properties
+* **Visual:** Boxplot
+
+```python
+sns.boxplot(x='city', y='price', data=df)
+```
+
+---
+
+### **4.3 Top Areas by Total Property Value**
+
+* **Finding:** Highest total property value in areas:
+
+  * Downtown Dubai, Dubai Hills Estate, Sobha Hartland
+* **Visual:** Bar chart
+
+```python
+top_areas = df.groupby('area')['price'].sum().sort_values(ascending=False).head(10)
+top_areas.plot(kind='bar', color='orange')
+```
+
+---
+
+### **4.4 Price Range Distribution per City**
+
+* **Finding:** Market segmentation is visible; Dubai dominates the >2M AED segment
+* **Visual:** Stacked Bar Chart
+
+```python
+price_city = pd.crosstab(df['city'], df['price_range'])
+price_city.plot(kind='bar', stacked=True, colormap='viridis')
+```
+
+---
+
+### **4.5 Bedroom Distribution per City**
+
+* **Finding:** Most properties are **2–3 bedrooms**; smaller cities have fewer large apartments
+* **Visual:** Stacked Bar Chart
+
+```python
+bedrooms_city = pd.crosstab(df['city'], df['bedrooms'])
+bedrooms_city.plot(kind='bar', stacked=True, colormap='coolwarm')
+```
+
+---
+
+## **5️⃣ Key Insights**
+
+1. **Price vs Bedrooms:** More bedrooms → higher price
+2. **City Effect:** Dubai is the most expensive city; Ajman & Sharjah more affordable
+3. **Top Areas:** Downtown Dubai, Dubai Hills Estate, Sobha Hartland have highest property values
+4. **Price Ranges:** Most properties fall in `500k-2M AED`; luxury segment >5M is smaller but concentrated in Dubai
+5. **Bathroom Count:** Constant (2), so no correlation with price
+6. **Market Segmentation:** Clear distinction between affordable, mid-range, and luxury segments
+
+---
+
+## **6️⃣ Tools & Skills Applied**
+
+* **Python & Pandas:** Data cleaning, grouping, pivot tables
+* **NumPy:** Numerical operations
+* **Matplotlib & Seaborn:** Data visualization (Heatmaps, Boxplots, Bar charts)
+* **EDA & Insights Generation:** Understand market trends, top areas, and price segmentation
+
+---
+
+## **7️⃣ Conclusion**
+
+This analysis provides a **comprehensive view of the UAE real estate market**, highlighting:
+
+* High-value areas and cities
+* Market segmentation by price
+* Impact of bedrooms on pricing
+
+This project demonstrates **data cleaning, analysis, and visualization skills** using Python, making it a strong portfolio piece for Data Analyst or Data Scientist roles.
+
